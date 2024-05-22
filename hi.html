@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catch the Clown Game</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f8ff;
+        }
+        #game-container {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            background-color: #87CEEB;
+            border: 5px solid #333;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        #clown {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-image: url('https://i.pinimg.com/736x/c5/90/09/c5900925eb22f06e426208a7b05035a9.jpg');
+            background-size: cover;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        #clown:hover {
+            transform: scale(1.1);
+        }
+        #scoreboard {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 1.5em;
+            color: #fff;
+            text-shadow: 2px 2px #000;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Music -->
+    <audio autoplay loop>
+        <source src="https://drive.google.com/uc?export=download&id=1GvijLxA_ImKNbmv0O2Q75ST9nuyq4w2X" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Game Container -->
+    <div id="game-container">
+        <div id="scoreboard">Score: 0</div>
+        <div id="clown"></div>
+    </div>
+
+    <!-- Game Script -->
+    <script>
+        const clown = document.getElementById('clown');
+        const scoreboard = document.getElementById('scoreboard');
+        const gameContainer = document.getElementById('game-container');
+        let score = 0;
+        let level = 1;
+        let speed = 1000;
+        let interval;
+
+        function moveClown() {
+            const containerRect = gameContainer.getBoundingClientRect();
+            const clownRect = clown.getBoundingClientRect();
+            const maxX = containerRect.width - clownRect.width;
+            const maxY = containerRect.height - clownRect.height;
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+            clown.style.left = randomX + 'px';
+            clown.style.top = randomY + 'px';
+        }
+
+        clown.addEventListener('click', () => {
+            score += 10;
+            scoreboard.innerText = `Score: ${score}`;
+            if (score % 100 === 0) {
+                level++;
+                speed = Math.max(300, speed - 100); // Increase difficulty
+                alert(`Level ${level}!`);
+                clearInterval(interval);
+                startGame();
+            }
+            moveClown();
+        });
+
+        function startGame() {
+            moveClown();
+            interval = setInterval(moveClown, speed);
+        }
+
+        startGame();
+    </script>
+</body>
+</html>
